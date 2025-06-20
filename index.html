@@ -34,6 +34,12 @@
         padding: 2em;
         margin: auto;
       }
+      #yesBtn {
+        padding: 1em 2em;
+        background-color: green;
+        color: white;
+        border: 1px white;
+      }
     </style>
   </head>
   <body>
@@ -41,6 +47,11 @@
       <h1>⏳AI-Powered 5-Year Countdown</h1>
       <h2>to be unemployed by not being AI enabled Employee.</h2>
       <div class="countdown" id="countdown">Loading...</div>
+
+      <hr />
+      <h2>Are you still working without any AI?</h2>
+      <button id="yesBtn">Yes</button>
+      <h3 id="streak">Streak: 0 days</h3>
     </div>
 
     <script>
@@ -74,6 +85,58 @@
 
       updateCountdown();
       setInterval(updateCountdown, 1000);
+
+      //
+      const btn = document.getElementById("yesBtn");
+      const streakDisplay = document.getElementById("streak");
+
+      function updateStreakDisplay(count) {
+        if (count === 0) {
+          streakDisplay.textContent = `Streak: 0 — AI owns you (for now).`;
+        } else {
+          streakDisplay.textContent = `Streak: ${count} day${
+            count !== 1 ? "s" : ""
+          }`;
+        }
+      }
+
+      function loadStreak() {
+        const streakData = JSON.parse(localStorage.getItem("streaks")) || {
+          lastDate: null,
+          count: 0,
+        };
+        updateStreakDisplay(streakData.count);
+      }
+
+      btn.addEventListener("click", () => {
+        const today = new Date().toDateString();
+        let streakData = JSON.parse(localStorage.getItem("streaks")) || {
+          lastDate: null,
+          count: 0,
+        };
+
+        if (streakData.lastDate === today) {
+          alert(
+            "You already checked in today! Humanity appreciates your consistency."
+          );
+        } else {
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          const isYesterday = streakData.lastDate === yesterday.toDateString();
+
+          streakData.count = isYesterday ? streakData.count + 1 : 1;
+          streakData.lastDate = today;
+          localStorage.setItem("streaks", JSON.stringify(streakData));
+
+          updateStreakDisplay(streakData.count);
+          alert(
+            "Great job! You've kept the streak alive — humanity thanks you!"
+          );
+        }
+      });
+
+      // Load on page load
+      window.addEventListener("DOMContentLoaded", loadStreak);
     </script>
   </body>
 </html>
