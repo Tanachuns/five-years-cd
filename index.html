@@ -40,6 +40,12 @@
         color: white;
         border: 1px white;
       }
+      #noBtn {
+        padding: 1em 2em;
+        background-color: red;
+        color: white;
+        border: 1px white;
+      }
     </style>
   </head>
   <body>
@@ -51,6 +57,7 @@
       <hr />
       <h2>Are you still working without any AI?</h2>
       <button id="yesBtn">Yes</button>
+      <button id="noBtn">Nope</button>
       <h3 id="streak">Streak: 0 days</h3>
     </div>
 
@@ -134,7 +141,17 @@
           );
         }
       });
+      const noBtn = document.getElementById("noBtn");
 
+      noBtn.addEventListener("click", () => {
+        const today = new Date().toDateString();
+
+        localStorage.removeItem("streaks");
+        updateStreakDisplay(0);
+        alert(
+          "Streak reset. You’ve betrayed humanity. The machines are laughing..."
+        );
+      });
       // Load on page load
       window.addEventListener("DOMContentLoaded", loadStreak);
     </script>
